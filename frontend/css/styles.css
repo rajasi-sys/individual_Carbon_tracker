@@ -1,0 +1,290 @@
+/* ============================================================
+   EcoQuest Platform — Custom Styles
+   Animations, Glassmorphism, Toggle Switch, Scrollbar & Utilities
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. Custom Color Variables & Theme
+   ---------------------------------------------------------- */
+:root {
+    --primary-green: #22c55e;
+    --primary-green-dark: #16a34a;
+    --accent-leaf: #86efac;
+    --dark-forest: #14532d;
+    --soft-bg: #f0fdf4;
+    --card-bg: rgba(255, 255, 255, 0.65);
+    --card-border: rgba(255, 255, 255, 0.35);
+    --shadow-soft: 0 8px 32px rgba(31, 38, 135, 0.12);
+    --shadow-glow-gold: 0 0 18px rgba(255, 215, 0, 0.55);
+    --shadow-glow-silver: 0 0 18px rgba(192, 192, 192, 0.55);
+    --shadow-glow-bronze: 0 0 18px rgba(205, 127, 50, 0.55);
+    --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ----------------------------------------------------------
+   2. Virtual Forest Animations
+   ---------------------------------------------------------- */
+
+/* Pulsing glow for the growing virtual tree icon */
+@keyframes treeGlow {
+    0% {
+        filter: drop-shadow(0 0 6px var(--accent-leaf));
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 20px var(--primary-green));
+        transform: scale(1.08);
+    }
+    100% {
+        filter: drop-shadow(0 0 6px var(--accent-leaf));
+        transform: scale(1);
+    }
+}
+
+/* Bounce entrance for tree stage upgrades */
+@keyframes treeBounce {
+    0%   { transform: scale(0.5); opacity: 0; }
+    60%  { transform: scale(1.15); opacity: 1; }
+    80%  { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+#treeIcon {
+    font-size: 5rem;
+    display: inline-block;
+    animation: treeGlow 3s ease-in-out infinite;
+    transition: transform var(--transition-smooth);
+}
+
+#treeIcon.stage-up {
+    animation: treeBounce 0.6s ease-out forwards;
+}
+
+/* ----------------------------------------------------------
+   3. Glassmorphism & Card Styles
+   ---------------------------------------------------------- */
+.eco-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    padding: 1.5rem;
+    transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.eco-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(31, 38, 135, 0.18);
+}
+
+/* Leaderboard rank highlight styles */
+.rank-gold {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 223, 64, 0.08));
+    box-shadow: var(--shadow-glow-gold);
+    border-left: 4px solid #ffd700;
+}
+
+.rank-silver {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(220, 220, 220, 0.08));
+    box-shadow: var(--shadow-glow-silver);
+    border-left: 4px solid #c0c0c0;
+}
+
+.rank-bronze {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(218, 165, 90, 0.08));
+    box-shadow: var(--shadow-glow-bronze);
+    border-left: 4px solid #cd7f32;
+}
+
+/* Badge card styling */
+.badge-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+    transition: transform var(--transition-smooth);
+}
+
+.badge-card:hover {
+    transform: scale(1.03);
+}
+
+.badge-icon {
+    font-size: 2.5rem;
+    min-width: 3rem;
+    text-align: center;
+}
+
+.badge-info h4 {
+    margin: 0 0 0.25rem;
+    color: var(--dark-forest);
+}
+
+.badge-info p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #555;
+}
+
+.badge-info small {
+    color: #888;
+    font-size: 0.75rem;
+}
+
+/* ----------------------------------------------------------
+   4. Zero-Emission Toggle Switch Custom Styling
+   ---------------------------------------------------------- */
+
+/* Hide native checkbox */
+.toggle-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Track */
+.toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+    background: #cbd5e1;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background var(--transition-smooth);
+}
+
+/* Sliding knob */
+.toggle-label::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: transform var(--transition-smooth);
+}
+
+/* Checked state — green highlight and slide right */
+.toggle-checkbox:checked + .toggle-label {
+    background: var(--primary-green);
+}
+
+.toggle-checkbox:checked + .toggle-label::after {
+    transform: translateX(24px);
+}
+
+/* Focus ring for accessibility */
+.toggle-checkbox:focus-visible + .toggle-label {
+    outline: 2px solid var(--primary-green-dark);
+    outline-offset: 2px;
+}
+
+/* Zero-emission status badge highlight */
+#zeroBadge.highlight {
+    background: var(--primary-green);
+    color: #fff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    animation: treeGlow 2s ease-in-out infinite;
+}
+
+/* ----------------------------------------------------------
+   5. Custom Scrollbar & Utility Overrides
+   ---------------------------------------------------------- */
+
+/* Sleek scrollbar for leaderboard table and breakdown containers */
+#leaderboardTableBody,
+#emissionsBreakdownContainer,
+#solutionsContainer {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-green) var(--soft-bg);
+}
+
+#leaderboardTableBody::-webkit-scrollbar,
+#emissionsBreakdownContainer::-webkit-scrollbar,
+#solutionsContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+#leaderboardTableBody::-webkit-scrollbar-track,
+#emissionsBreakdownContainer::-webkit-scrollbar-track,
+#solutionsContainer::-webkit-scrollbar-track {
+    background: var(--soft-bg);
+    border-radius: 999px;
+}
+
+#leaderboardTableBody::-webkit-scrollbar-thumb,
+#emissionsBreakdownContainer::-webkit-scrollbar-thumb,
+#solutionsContainer::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+    border-radius: 999px;
+}
+
+#leaderboardTableBody::-webkit-scrollbar-thumb:hover,
+#emissionsBreakdownContainer::-webkit-scrollbar-thumb:hover,
+#solutionsContainer::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-green-dark);
+}
+
+/* Smooth section toggling */
+.hidden-view {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-smooth);
+}
+
+/* Solution side-by-side cards */
+.solution-card.side-by-side {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 12px;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+}
+
+.solution-card.side-by-side > div {
+    flex: 1;
+}
+
+.solution-what-you-did h4 {
+    color: #dc2626;
+}
+
+.solution-what-you-can-do h4 {
+    color: var(--primary-green-dark);
+}
+
+/* Breakdown items */
+.breakdown-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 0.9rem;
+}
+
+.breakdown-item:last-child {
+    border-bottom: none;
+}
+
+/* XP progress bar */
+#xpProgressBar {
+    height: 8px;
+    background: linear-gradient(90deg, var(--primary-green), var(--accent-leaf));
+    border-radius: 999px;
+    transition: width 0.5s ease-out;
+}

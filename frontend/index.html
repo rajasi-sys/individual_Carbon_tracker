@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EcoQuest — Track your daily carbon footprint, earn XP, grow your virtual forest, and unlock financial savings.">
+    <title>🌱 EcoQuest — Individual Carbon Tracker</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom EcoQuest Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg-gradient-to-br from-green-50 via-white to-emerald-50 min-h-screen w-full overflow-y-auto font-sans text-gray-800">
+
+    <!-- ========================================================
+         HEADER / NAVIGATION BAR
+         ======================================================== -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-green-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+            <!-- App Title & Logo -->
+            <h1 class="text-2xl font-display font-bold text-green-700 tracking-tight">
+                🌱 EcoQuest
+            </h1>
+
+            <!-- User Status Bar -->
+            <div class="flex items-center gap-4">
+                <span id="userInfo" class="text-sm text-gray-500">Not Logged In</span>
+                <button id="logoutBtn"
+                    class="hidden px-4 py-1.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Navigation (visible when authenticated) -->
+        <nav id="tabNav" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-1 pb-2 overflow-x-auto">
+            <button data-tab="profileSection"
+                class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-green-700 hover:bg-green-100 transition-colors">
+                👤 Profile
+            </button>
+            <button data-tab="loggerSection"
+                class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-green-700 hover:bg-green-100 transition-colors">
+                📝 Log Emissions
+            </button>
+            <button data-tab="statsSection"
+                class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-green-700 hover:bg-green-100 transition-colors">
+                📊 Analytics & ROI
+            </button>
+            <button data-tab="forestSection"
+                class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-green-700 hover:bg-green-100 transition-colors">
+                🌳 Forest & Leaderboard
+            </button>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ========================================================
+             AUTH CONTAINER
+             ======================================================== -->
+        <section id="authCard" class="max-w-md mx-auto">
+            <div class="eco-card text-center">
+                <div class="text-5xl mb-4">🌍</div>
+                <h2 class="text-2xl font-display font-bold text-green-800 mb-2">Welcome to EcoQuest</h2>
+                <p class="text-gray-500 mb-6 text-sm">Track your carbon footprint. Grow your forest. Save the planet.</p>
+
+                <div class="space-y-4 text-left">
+                    <div>
+                        <label for="authEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input id="authEmail" type="email" placeholder="you@example.com"
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label for="authPassword" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input id="authPassword" type="password" placeholder="••••••••"
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 focus:border-transparent outline-none transition">
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6">
+                    <button id="loginBtn"
+                        class="flex-1 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all">
+                        Log In
+                    </button>
+                    <button id="registerBtn"
+                        class="flex-1 px-4 py-2.5 bg-white border-2 border-green-600 text-green-700 font-semibold rounded-xl hover:bg-green-50 transition-all">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================
+             MAIN DASHBOARD (hidden until authenticated)
+             ======================================================== -->
+        <div id="appDashboard" style="display: none;">
+
+            <!-- ====================================================
+                 TAB 1: PROFILE ONBOARDING
+                 ==================================================== -->
+            <section id="profileSection" class="dashboard-tab space-y-6">
+                <h2 class="text-xl font-display font-bold text-green-800">👤 Your Profile</h2>
+
+                <!-- Demographic Form -->
+                <div class="eco-card">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Demographic Information</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="profName" class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+                            <input id="profName" type="text" placeholder="Jane Doe"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label for="profAge" class="block text-sm font-medium text-gray-600 mb-1">Age</label>
+                            <input id="profAge" type="number" placeholder="28" min="1" max="120"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label for="profGender" class="block text-sm font-medium text-gray-600 mb-1">Gender</label>
+                            <select id="profGender"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition bg-white">
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Non-Binary">Non-Binary</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="profCity" class="block text-sm font-medium text-gray-600 mb-1">City</label>
+                            <select id="profCity"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition bg-white">
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="London">London</option>
+                                <option value="New York">New York</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="profHousehold" class="block text-sm font-medium text-gray-600 mb-1">Household Size</label>
+                            <input id="profHousehold" type="number" placeholder="4" min="1" max="20"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                    </div>
+                    <button id="saveProfileBtn"
+                        class="mt-5 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all">
+                        💾 Save Profile
+                    </button>
+                </div>
+
+                <!-- Bill Upload Card -->
+                <div class="eco-card">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">📄 Upload Utility Bill</h3>
+                    <p class="text-sm text-gray-500 mb-4">Upload your electricity or gas bill screenshot for automated carbon estimation.</p>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <input id="billFile" type="file" accept="image/*,.pdf"
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 transition">
+                        <button id="uploadBillBtn"
+                            class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all whitespace-nowrap">
+                            ⬆️ Upload Bill
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+                 TAB 2: DAILY EMISSIONS LOGGER
+                 ==================================================== -->
+            <section id="loggerSection" class="dashboard-tab hidden space-y-6">
+                <h2 class="text-xl font-display font-bold text-green-800">📝 Daily Emissions Logger</h2>
+
+                <div class="eco-card">
+                    <!-- Date Picker & Zero-Emission Toggle Row -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <label for="logDate" class="block text-sm font-medium text-gray-600 mb-1">Date</label>
+                            <input id="logDate" type="date"
+                                class="px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-medium text-gray-600">$0 CO₂ Zero-Emission Day</span>
+                            <input id="zeroToggle" type="checkbox" class="toggle-checkbox">
+                            <label for="zeroToggle" class="toggle-label"></label>
+                            <span id="zeroBadge" class="text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full" style="display:none;">
+                                0 kg CO₂ ✨
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Activity Input Fields Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div>
+                            <label for="logElec" class="block text-sm font-medium text-gray-600 mb-1">⚡ Electricity (kWh)</label>
+                            <input id="logElec" type="number" step="0.1" placeholder="0.0" min="0"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label for="logPetrol" class="block text-sm font-medium text-gray-600 mb-1">⛽ Petrol Car (km)</label>
+                            <input id="logPetrol" type="number" step="0.1" placeholder="0.0" min="0"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label for="logDiesel" class="block text-sm font-medium text-gray-600 mb-1">🚗 Diesel Car (km)</label>
+                            <input id="logDiesel" type="number" step="0.1" placeholder="0.0" min="0"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label for="logBus" class="block text-sm font-medium text-gray-600 mb-1">🚌 Bus (km)</label>
+                            <input id="logBus" type="number" step="0.1" placeholder="0.0" min="0"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label for="logFlight" class="block text-sm font-medium text-gray-600 mb-1">✈️ Flight (km)</label>
+                            <input id="logFlight" type="number" step="0.1" placeholder="0.0" min="0"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label for="logLPG" class="block text-sm font-medium text-gray-600 mb-1">🔥 LPG Cylinder</label>
+                            <input id="logLPG" type="number" step="0.1" placeholder="0.0" min="0"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label for="logMeals" class="block text-sm font-medium text-gray-600 mb-1">🥩 Meat Meals</label>
+                            <input id="logMeals" type="number" step="1" placeholder="0" min="0"
+                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+                        </div>
+                    </div>
+
+                    <button id="lockDailyBtn"
+                        class="mt-6 w-full px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-lg">
+                        🔒 Lock Daily Entry
+                    </button>
+                </div>
+            </section>
+
+            <!-- ====================================================
+                 TAB 3: ANALYTICS & FINANCIAL ROI
+                 ==================================================== -->
+            <section id="statsSection" class="dashboard-tab hidden space-y-6">
+                <h2 class="text-xl font-display font-bold text-green-800">📊 Analytics & Financial ROI</h2>
+
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="eco-card text-center">
+                        <p class="text-sm text-gray-500 mb-1">Total Daily Footprint</p>
+                        <p id="statTotalEmissions" class="text-3xl font-bold text-green-700">-- kg CO₂</p>
+                    </div>
+                    <div class="eco-card text-center">
+                        <p class="text-sm text-gray-500 mb-1">City Benchmark</p>
+                        <p id="statCityBenchmark" class="text-3xl font-bold text-blue-600">--</p>
+                    </div>
+                </div>
+
+                <!-- Financial ROI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="eco-card text-center">
+                        <p class="text-sm text-gray-500 mb-1">Monthly Spend</p>
+                        <p id="statMonthlySpend" class="text-2xl font-bold text-red-500">--</p>
+                    </div>
+                    <div class="eco-card text-center">
+                        <p class="text-sm text-gray-500 mb-1">Potential Monthly Savings</p>
+                        <p id="statMonthlySavings" class="text-2xl font-bold text-emerald-600">--</p>
+                    </div>
+                    <div class="eco-card text-center">
+                        <p class="text-sm text-gray-500 mb-1">Projected 12-Month ROI</p>
+                        <p id="statYearlyROI" class="text-2xl font-bold text-amber-600">--</p>
+                    </div>
+                </div>
+
+                <!-- Emissions Breakdown -->
+                <div class="eco-card">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">📋 Sector Breakdown</h3>
+                    <div id="emissionsBreakdownContainer" class="max-h-64 overflow-y-auto">
+                        <p class="text-sm text-gray-400">Lock a daily entry to see your emissions breakdown.</p>
+                    </div>
+                </div>
+
+                <!-- Side-by-Side Solutions -->
+                <div class="eco-card">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">💡 Side-by-Side Solutions</h3>
+                    <div id="solutionsContainer" class="max-h-80 overflow-y-auto space-y-3">
+                        <p class="text-sm text-gray-400">Solutions will appear once you log your first entry.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+                 TAB 4: VIRTUAL FOREST & LEADERBOARD
+                 ==================================================== -->
+            <section id="forestSection" class="dashboard-tab hidden space-y-6">
+                <h2 class="text-xl font-display font-bold text-green-800">🌳 Virtual Forest & Leaderboard</h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Virtual Tree Card -->
+                    <div class="eco-card text-center">
+                        <div id="treeIcon" class="text-6xl mb-2">🌱</div>
+                        <p id="treeStageLabel" class="text-lg font-semibold text-green-700 mb-4">Stage 1: 🌱 Seedling</p>
+
+                        <div class="grid grid-cols-3 gap-3 mb-4">
+                            <div>
+                                <p class="text-xs text-gray-500">Streak</p>
+                                <p id="streakCount" class="text-2xl font-bold text-orange-500">0</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Level</p>
+                                <p id="userLevel" class="text-2xl font-bold text-green-700">1</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">XP</p>
+                                <p id="userXP" class="text-2xl font-bold text-purple-600">0</p>
+                            </div>
+                        </div>
+
+                        <!-- XP Progress Bar -->
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                            <div id="xpProgressBar" class="h-full rounded-full" style="width: 0%;"></div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">XP toward next level</p>
+                    </div>
+
+                    <!-- Badges Grid -->
+                    <div class="eco-card">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">🏅 Badges</h3>
+                        <div id="badgesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
+                            <p class="text-sm text-gray-400">No badges unlocked yet. Keep logging!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Global Leaderboard Table -->
+                <div class="eco-card">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">🏆 Global Leaderboard — Top 10</h3>
+                    <div class="overflow-x-auto max-h-96 overflow-y-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="text-xs text-gray-500 uppercase border-b border-gray-200">
+                                <tr>
+                                    <th class="py-3 px-2">Rank</th>
+                                    <th class="py-3 px-2">Tree</th>
+                                    <th class="py-3 px-2">Name</th>
+                                    <th class="py-3 px-2">City</th>
+                                    <th class="py-3 px-2">XP</th>
+                                    <th class="py-3 px-2">Level</th>
+                                    <th class="py-3 px-2">Streak</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardTableBody">
+                                <tr>
+                                    <td colspan="7" class="py-6 text-center text-gray-400">Loading leaderboard...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- end #appDashboard -->
+    </main>
+
+    <!-- ========================================================
+         FOOTER
+         ======================================================== -->
+    <footer class="text-center text-xs text-gray-400 py-6 border-t border-gray-100">
+        &copy; 2026 EcoQuest — Track. Reduce. Grow. 🌍
+    </footer>
+
+    <!-- ========================================================
+         ES MODULE SCRIPT BLOCK
+         ======================================================== -->
+    <script type="module" src="js/app.js"></script>
+
+</body>
+</html>
