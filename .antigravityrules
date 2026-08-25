@@ -1,0 +1,11 @@
+# Technology Stack Profile
+Backend: Python 3.11+ with FastAPI
+Database: SQLite + SQLAlchemy ORM (single-file DB, handle session yield lifecycles)
+Security: JWT (python-jose) + bcrypt (passlib)
+Frontend: HTML5, Vanilla JavaScript (ES Modules), Tailwind CSS (No React/Vue/Vite)
+
+# Agent Execution Rules
+1. End-to-End Delegation: When assigned a feature, implement the database schema changes, the FastAPI routes, and the frontend UI concurrently.
+2. No Extraneous Dependencies: Do not add node_modules or external build tools. Keep the frontend light and native.
+3. Verification Protocol: After writing code, run the local uvicorn server. Use the Browser Agent to visit '/docs' to verify backend schemas, and visit the main UI page to click through and test the JavaScript fetch cycles visually.
+4. Provide Artifacts: Include terminal logs and a visual browser verification summary in your completed task Artifact.
