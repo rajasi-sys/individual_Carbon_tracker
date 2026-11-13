@@ -248,3 +248,9 @@ backend/uploads/*
 # OS Generated Files
 .DS_Store
 Thumbs.db
+
+# Uploads folder for ML models
+uploads/
+
+# Database file
+backend/ecoquest.db
